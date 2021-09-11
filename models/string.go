@@ -21,5 +21,5 @@ func (vote VoteMessage) String() string {
 }
 
 func (user UserMsg) String() string {
-	return fmt.Sprintf("%s#'%s'", user.Id[:8], user.Name)
+	return fmt.Sprintf("%s#%s", user.Id[:8], user.Name)
 }
