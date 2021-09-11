@@ -3,6 +3,7 @@ package main
 import (
 	"beat-battle/models"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -33,6 +34,15 @@ func (sess *Session) AddVote(w http.ResponseWriter, r *http.Request) {
 
 	voteLog("received: %v", voteMsg)
 	sess.voteQueue = append(sess.voteQueue, voteMsg)
+}
+
+func (sess *Session) processVote(vote models.VoteMessage) error {
+	submission, found := sess.battle.Submissions[vote.Submission]
+	if !found {
+		return fmt.Errorf("could not find submission matching uuid '%s'", vote.Submission)
+	}
+	submission.Votes++
+	return nil
 }
 
 func handleVoteError(w http.ResponseWriter, err error) {

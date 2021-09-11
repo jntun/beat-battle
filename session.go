@@ -61,15 +61,6 @@ func (sess *Session) tryVoteDrain() {
 	}
 }
 
-func (sess *Session) processVote(vote models.VoteMessage) error {
-	submission, found := sess.battle.Submissions[vote.Submission]
-	if !found {
-		return fmt.Errorf("could not find submission matching uuid '%s'", vote.Submission)
-	}
-	submission.Votes++
-	return nil
-}
-
 func NewSession() Session {
 	return Session{models.NewBattle(), make([]models.SubmissionMessage, 0), make([]models.VoteMessage, 0)}
 }
