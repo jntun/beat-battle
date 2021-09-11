@@ -1,7 +1,6 @@
 package main
 
 import (
-	"beat-battle/models"
 	"fmt"
 	"log"
 )
@@ -28,9 +27,4 @@ func (sess *Session) drainVoteQueue() error {
 		}
 	}
 	return nil
-}
-
-func verifyVote(vote models.VoteMessage) bool {
-	/* TODO logically verify vote message */
-	return true
 }

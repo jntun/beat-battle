@@ -45,6 +45,11 @@ func (sess *Session) processVote(vote models.VoteMessage) error {
 	return nil
 }
 
+func verifyVote(vote models.VoteMessage) bool {
+	/* TODO logically verify vote message */
+	return true
+}
+
 func handleVoteError(w http.ResponseWriter, err error) {
 	voteError(err)
 	writeErrorResponse(w, err)
