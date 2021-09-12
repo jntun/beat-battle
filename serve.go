@@ -18,11 +18,13 @@ func (sess *Session) GetSubmissions(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	sess.battle.SubLock.Lock()
 	msg, err := json.Marshal(sess.battle.Submissions)
 	if err != nil {
 		serveLog("%v", err)
 		return
 	}
+	sess.battle.SubLock.Unlock()
 
 	w.WriteHeader(http.StatusOK)
 	_, err = w.Write(msg)
