@@ -14,6 +14,7 @@ type Session struct {
 	battle          models.Battle
 	submissionQueue []models.SubmissionMessage
 	voteQueue       []models.VoteMessage
+	queueStat
 }
 
 func (sess *Session) hookHttpServer() {
@@ -29,7 +30,7 @@ func (sess *Session) main(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 
-	genLog("Main", r.URL.String())
+	//genLog("Main", r.URL.String())
 	splitURL := strings.Split(r.URL.String(), "/")
 	if !(len(splitURL) > 1) {
 		// for only /battle/ endpoint
@@ -37,13 +38,17 @@ func (sess *Session) main(w http.ResponseWriter, r *http.Request) {
 	}
 	switch splitURL[2] {
 	case "vote":
-		sess.AddVote(w, r)
-		sess.tryVoteDrain()
+		if r.Method == http.MethodPost {
+			sess.AddVote(w, r)
+			sess.tryVoteDrain()
+		}
 	case "submissions":
 		sess.GetSubmissions(w, r)
 	case "submit":
-		sess.Submit(w, r)
-		sess.tryDrain()
+		if r.Method == http.MethodPut {
+			sess.Submit(w, r)
+			sess.tryDrain()
+		}
 	}
 
 }
@@ -62,5 +67,5 @@ func (sess *Session) tryVoteDrain() {
 }
 
 func NewSession() Session {
-	return Session{models.NewBattle(), make([]models.SubmissionMessage, 0), make([]models.VoteMessage, 0)}
+	return Session{models.NewBattle(), submQueue(), voteQueue(), queueStat{queueIndex{0, 0, voteEntryPoint, voteHWM}, queueIndex{0, 0, submEntryPoint, submHWM}}}
 }
