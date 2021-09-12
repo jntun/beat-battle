@@ -15,8 +15,8 @@ type UserMsg struct {
 }
 
 type SubmissionMessage struct {
-	Id       string
-	Author   UserMsg `json:"author,omitempty"`
+	Id       string `json:",omitempty"`
+	Author   UserMsg
 	Resource string
 	Type     uint
 }
