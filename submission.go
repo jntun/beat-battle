@@ -4,6 +4,7 @@ import (
 	"beat-battle/models"
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -27,7 +28,13 @@ func (sess *Session) Submit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	subLog("new submission: %v", *subMsg)
-	sess.submissionQueue = append(sess.submissionQueue, *subMsg)
+	/* Insert into submission queue here in O(1) time since we pre-allocated all the slots */
+	sess.submissionQueue[sess.queueStat.submCount.length] = *subMsg
+	sess.queueStat.submCount.length++
+	w.WriteHeader(http.StatusOK)
+	if _, err := w.Write([]byte("{ \"status\": \"done\" } ")); err != nil {
+		log.Printf("failed write: %s\n", err)
+	}
 }
 
 func subLog(fmtStr string, args ...interface{}) {

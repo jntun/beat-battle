@@ -33,7 +33,9 @@ func (sess *Session) AddVote(w http.ResponseWriter, r *http.Request) {
 	voteMsg.Timestamp = time.Now()
 
 	voteLog("received: %v", voteMsg)
-	sess.voteQueue = append(sess.voteQueue, voteMsg)
+	sess.voteQueue[sess.queueStat.voteCount.length] = voteMsg
+	sess.queueStat.voteCount.length++
+	w.Write([]byte("vote done."))
 }
 
 func (sess *Session) processVote(vote models.VoteMessage) error {
