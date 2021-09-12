@@ -5,7 +5,7 @@ import (
 )
 
 func (sub Submission) String() string {
-	return fmt.Sprintf("sub %s: %s %s - %d", sub.Author, sub.ID.String(), sub.Resource.String(), sub.Type)
+	return fmt.Sprintf("subm %s: %s %s - %d", sub.Author, sub.ID.String(), sub.Resource.String(), sub.Type)
 }
 
 func (user User) String() string {
@@ -17,7 +17,7 @@ func (sub SubmissionMessage) String() string {
 }
 
 func (vote VoteMessage) String() string {
-	return fmt.Sprintf("%s: %s", vote.User, vote.Submission[:8])
+	return fmt.Sprintf("vote %s: %s", vote.User, vote.Submission[:8])
 }
 
 func (user UserMsg) String() string {
