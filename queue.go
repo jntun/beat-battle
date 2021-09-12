@@ -3,7 +3,6 @@ package main
 import (
 	"beat-battle/models"
 	"fmt"
-	"log"
 )
 
 var submEntryPoint uint = 10
@@ -51,7 +50,6 @@ func (i *queueIndex) reset() {
 }
 
 func (sess *Session) drainSubmitQueue() error {
-	//hwmLog("%v", sess.queueStat.submCount)
 	if sess.queueStat.submCount.shouldDrain() {
 		for ; sess.queueStat.submCount.lastInsert < sess.queueStat.submCount.length; sess.queueStat.submCount.lastInsert++ {
 			sess.battle.SubLock.Lock()
@@ -76,11 +74,10 @@ func (sess *Session) drainSubmitQueue() error {
 
 func (sess *Session) drainVoteQueue() error {
 	if sess.queueStat.voteCount.shouldDrain() {
-		hwmLog("vote drain: %v", sess.queueStat.voteCount)
 		for ; sess.queueStat.voteCount.lastInsert < sess.queueStat.voteCount.length; sess.queueStat.voteCount.lastInsert++ {
 			voteMsg := sess.voteQueue[sess.queueStat.voteCount.lastInsert]
 			if verifyVote(voteMsg) {
-				log.Printf("draining: %v |\n", voteMsg)
+				//log.Printf("draining: %v |\n", voteMsg)
 				if err := sess.processVote(voteMsg); err != nil {
 					return err
 				}
