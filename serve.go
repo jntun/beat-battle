@@ -34,6 +34,10 @@ func (sess *Session) GetSubmissions(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (sess *Session) GetSubmissionInfo(w http.ResponseWriter, r *http.Request, uuid string) {
+	serveLog("Getting sub#%s", uuid[:8])
+}
+
 func serveLog(fmtStr string, args ...interface{}) {
 	genLog("SERVE", fmtStr, args...)
 }

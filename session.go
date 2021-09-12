@@ -45,6 +45,10 @@ func (sess *Session) main(w http.ResponseWriter, r *http.Request) {
 		}
 	case "submissions":
 		sess.GetSubmissions(w, r)
+	case "submission":
+		if len(splitURL) > 3 {
+			sess.GetSubmissionInfo(w, r, splitURL[3])
+		}
 	case "submit":
 		if r.Method == http.MethodPut {
 			sess.Submit(w, r)
