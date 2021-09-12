@@ -27,7 +27,7 @@ func (sess *Session) Submit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	subLog("new submission: %v", *subMsg)
+	subLog("received: %v", *subMsg)
 	/* Insert into submission queue here in O(1) time since we pre-allocated all the slots */
 	sess.submissionQueue[sess.queueStat.submCount.length] = *subMsg
 	sess.queueStat.submCount.length++
@@ -38,5 +38,5 @@ func (sess *Session) Submit(w http.ResponseWriter, r *http.Request) {
 }
 
 func subLog(fmtStr string, args ...interface{}) {
-	genLog("Subm", fmtStr, args)
+	genLog("SUBM", fmtStr, args...)
 }

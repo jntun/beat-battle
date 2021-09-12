@@ -35,5 +35,5 @@ func (sess *Session) GetSubmissions(w http.ResponseWriter, r *http.Request) {
 }
 
 func serveLog(fmtStr string, args ...interface{}) {
-	genLog("SERVE", fmtStr, args)
+	genLog("SERVE", fmtStr, args...)
 }

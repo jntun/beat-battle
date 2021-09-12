@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -21,9 +22,7 @@ func genLog(prefix string, fmtStr string, args ...interface{}) {
 	builder.Write([]byte("] "))
 	builder.Write([]byte(fmtStr))
 	builder.Write([]byte("\n"))
-	if len(args) != 0 {
-		log.Printf(builder.String(), args)
-	} else {
-		log.Print(builder.String())
-	}
+	str := fmt.Sprintf(builder.String(), args...)
+	log.Print(str)
+
 }

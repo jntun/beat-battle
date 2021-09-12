@@ -60,11 +60,10 @@ func (sess *Session) drainSubmitQueue() error {
 				sess.battle.SubLock.Unlock()
 				return fmt.Errorf("%v, %s", subMsg, err)
 			}
-			//log.Printf("draining: %v | ref: %p\n", *submission, submission)
+			hwmLog("draining: %v | ref: %p", *submission, submission)
 			sess.battle.Submissions[submission.UUID.String()] = *submission
 			sess.battle.SubLock.Unlock()
 		}
-		//hwmLog("sub.len: %d", len(sess.battle.Submissions))
 	}
 	if sess.queueStat.submCount.atHWM() {
 		sess.hwmSubm()
@@ -77,7 +76,7 @@ func (sess *Session) drainVoteQueue() error {
 		for ; sess.queueStat.voteCount.lastInsert < sess.queueStat.voteCount.length; sess.queueStat.voteCount.lastInsert++ {
 			voteMsg := sess.voteQueue[sess.queueStat.voteCount.lastInsert]
 			if verifyVote(voteMsg) {
-				//log.Printf("draining: %v |\n", voteMsg)
+				hwmLog("draining: %v |", voteMsg)
 				if err := sess.processVote(voteMsg); err != nil {
 					return err
 				}
@@ -106,7 +105,7 @@ func (sess *Session) hwmSubm() {
 }
 
 func hwmLog(fmtStr string, args ...interface{}) {
-	genLog("Hwm", fmtStr, args)
+	genLog("Hwm", fmtStr, args...)
 }
 
 func submQueue() []models.SubmissionMessage {

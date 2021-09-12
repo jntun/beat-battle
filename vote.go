@@ -70,5 +70,5 @@ func voteError(err error) {
 }
 
 func voteLog(fmtStr string, args ...interface{}) {
-	genLog("VOTE", fmtStr, args)
+	genLog("VOTE", fmtStr, args...)
 }
