@@ -2,6 +2,7 @@ package models
 
 import (
 	"net/url"
+	"sync"
 	"time"
 
 	"github.com/satori/go.uuid"
@@ -16,6 +17,7 @@ type Battle struct {
 	Title            string
 	Sequence         uint
 	Submissions      map[string]Submission
+	SubLock          sync.Mutex
 	submissionWindow TimeWindow
 	voteWindow       TimeWindow
 }
@@ -45,6 +47,7 @@ func NewBattle() Battle {
 		"Test battle #1",
 		0,
 		subMap,
+		sync.Mutex{},
 		TimeWindow{
 			start: time.Now(),
 			end:   time.Now().Add(time.Hour),
