@@ -11,8 +11,8 @@ var voteEntryPoint uint = 100
 var voteHWM uint = 1000
 
 type queueStat struct {
-	voteCount queueIndex
-	submCount queueIndex
+	vote queueIndex
+	subm queueIndex
 }
 
 type queueIndex struct {
@@ -50,33 +50,33 @@ func (i *queueIndex) reset() {
 }
 
 func (sess *Session) drainSubmitQueue() error {
-	if sess.queueStat.submCount.shouldDrain() {
-		for ; sess.queueStat.submCount.lastInsert < sess.queueStat.submCount.length; sess.queueStat.submCount.lastInsert++ {
-			sess.battle.SubLock.Lock()
-			subMsg := sess.submissionQueue[sess.queueStat.submCount.lastInsert]
+	if sess.queueStat.subm.shouldDrain() {
+		hwmLog("entry point for submit queue...")
+		sess.battle.SubLock.Lock()
+		for ; sess.queueStat.subm.lastInsert < sess.queueStat.subm.length; sess.queueStat.subm.lastInsert++ {
+			subMsg := sess.submissionQueue[sess.queueStat.subm.lastInsert]
 			submission, err := subMsg.ToSubmission()
 			if err != nil {
 				/* TODO process and see if we want to continue */
 				sess.battle.SubLock.Unlock()
 				return fmt.Errorf("%v, %s", subMsg, err)
 			}
-			hwmLog("draining: %v | ref: %p", *submission, submission)
 			sess.battle.Submissions[submission.UUID.String()] = *submission
-			sess.battle.SubLock.Unlock()
 		}
+		sess.battle.SubLock.Unlock()
 	}
-	if sess.queueStat.submCount.atHWM() {
+	if sess.queueStat.subm.atHWM() {
 		sess.hwmSubm()
 	}
 	return nil
 }
 
 func (sess *Session) drainVoteQueue() error {
-	if sess.queueStat.voteCount.shouldDrain() {
-		for ; sess.queueStat.voteCount.lastInsert < sess.queueStat.voteCount.length; sess.queueStat.voteCount.lastInsert++ {
-			voteMsg := sess.voteQueue[sess.queueStat.voteCount.lastInsert]
+	if sess.queueStat.vote.shouldDrain() {
+		hwmLog("entry point for vote queue...")
+		for ; sess.queueStat.vote.lastInsert < sess.queueStat.vote.length; sess.queueStat.vote.lastInsert++ {
+			voteMsg := sess.voteQueue[sess.queueStat.vote.lastInsert]
 			if verifyVote(voteMsg) {
-				hwmLog("draining: %v |", voteMsg)
 				if err := sess.processVote(voteMsg); err != nil {
 					return err
 				}
@@ -84,7 +84,7 @@ func (sess *Session) drainVoteQueue() error {
 		}
 
 	}
-	if sess.queueStat.voteCount.atHWM() {
+	if sess.queueStat.vote.atHWM() {
 		sess.hwmVote()
 	}
 	return nil
@@ -93,15 +93,15 @@ func (sess *Session) drainVoteQueue() error {
 func (sess *Session) hwmVote() {
 	hwmLog("%s", "Flushing vote")
 	sess.voteQueue = voteQueue()
-	sess.queueStat.voteCount.lastInsert = uint(0)
-	sess.queueStat.voteCount.length = uint(0)
+	sess.queueStat.vote.lastInsert = uint(0)
+	sess.queueStat.vote.length = uint(0)
 }
 
 func (sess *Session) hwmSubm() {
 	hwmLog("%s", "Flushing submission")
 	sess.submissionQueue = submQueue()
-	sess.queueStat.submCount.lastInsert = uint(0)
-	sess.queueStat.submCount.length = uint(0)
+	sess.queueStat.subm.lastInsert = uint(0)
+	sess.queueStat.subm.length = uint(0)
 }
 
 func hwmLog(fmtStr string, args ...interface{}) {
