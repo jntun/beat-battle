@@ -23,11 +23,11 @@ type Battle struct {
 }
 
 type Submission struct {
-	ID
-	Author   User
-	Resource url.URL
-	Votes    uint
-	Type     uint
+	ID       `json:"id,omitempty"`
+	Author   User    `json:"author"`
+	Resource url.URL `json:"resource"`
+	Votes    uint    `json:"votes,omitempty"`
+	Type     uint    `json:"type"`
 }
 
 type User struct {
