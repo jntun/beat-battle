@@ -39,7 +39,6 @@ func TestSession_SubmitLive(t *testing.T) {
 		}
 		t.Log(string(body))
 	}
-
 }
 
 func TestSession_Submit(t *testing.T) {

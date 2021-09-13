@@ -13,8 +13,6 @@ import (
 )
 
 func TestSession_AddVoteLive(t *testing.T) {
-	t.Run("Live", TestSession_SubmitLive)
-
 	tResp, err := http.Get("http://localhost:8000/battle/submissions")
 	if err != nil {
 		t.Errorf("couldn't get target body: %s", err)
@@ -27,12 +25,12 @@ func TestSession_AddVoteLive(t *testing.T) {
 	err = json.Unmarshal(tBody, &tObj)
 	var targetID string
 
-	for _, key := range tObj.(map[string]interface{}) {
-		targetID = key.(string)
+	for key, _ := range tObj.(map[string]interface{}) {
+		targetID = key
 		break
 	}
 
-	fmt.Println("xyxyxy:", targetID)
+	fmt.Println("target:", targetID)
 
 	msg := models.VoteMessage{
 		User: models.UserMsg{
@@ -64,12 +62,12 @@ func TestSession_AddVoteLive(t *testing.T) {
 func TestSession_AddVote(t *testing.T) {
 	sess := NewSession()
 
-	for i := 0; i < int(sess.queueStat.submCount.entryPoint); i++ {
+	for i := 0; i < int(sess.queueStat.subm.entryPoint); i++ {
 		req := makeSendReq(&sess)
 		tryReq(t, &sess, req)
 	}
 
-	for i := 0; i < int(sess.queueStat.voteCount.entryPoint); i++ {
+	for i := 0; i < int(sess.queueStat.vote.entryPoint); i++ {
 		req := makeVoteReq(&sess)
 		tryReq(t, &sess, req)
 	}
