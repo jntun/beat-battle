@@ -5,11 +5,11 @@ import (
 )
 
 func (sub Submission) String() string {
-	return fmt.Sprintf("subm %s: %s %s - %d", sub.Author, sub.ID.String(), sub.Resource.String(), sub.Type)
+	return fmt.Sprintf("subm %s: %s %s - %d", sub.ID.String(), sub.Author, sub.Resource.String(), sub.Type)
 }
 
 func (user User) String() string {
-	return fmt.Sprintf("%s '%s'", user.UUID.String()[:8], user.Name)
+	return fmt.Sprintf("%s#%s", user.UUID.String()[:8], user.Name)
 }
 
 func (sub SubmissionMessage) String() string {
@@ -17,6 +17,9 @@ func (sub SubmissionMessage) String() string {
 }
 
 func (vote VoteMessage) String() string {
+	if len(vote.Submission) < 8 {
+		return fmt.Sprintf("vote %s: %s", vote.User, vote.Submission)
+	}
 	return fmt.Sprintf("vote %s: %s", vote.User, vote.Submission[:8])
 }
 
