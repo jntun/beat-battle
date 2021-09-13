@@ -32,9 +32,9 @@ func (sess *Session) AddVote(w http.ResponseWriter, r *http.Request) {
 
 	voteMsg.Timestamp = time.Now()
 
-	voteLog("received: %v", voteMsg)
-	sess.voteQueue[sess.queueStat.voteCount.length] = voteMsg
-	sess.queueStat.voteCount.length++
+	//voteLog("received: %v", voteMsg)
+	sess.voteQueue[sess.queueStat.vote.length] = voteMsg
+	sess.queueStat.vote.length++
 	w.Write([]byte("vote done."))
 }
 
@@ -44,6 +44,7 @@ func (sess *Session) processVote(vote models.VoteMessage) error {
 		return fmt.Errorf("could not find submission matching uuid '%s'", vote.Submission)
 	}
 	submission.Votes++
+	//voteLog("adding vote for %v | %v", submission, vote)
 	return nil
 }
 
