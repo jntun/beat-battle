@@ -25,6 +25,7 @@ func (sess *Session) GetSubmissions(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	sess.battle.SubLock.Unlock()
+	//serveLog("sending: %s", string(msg))
 
 	w.WriteHeader(http.StatusOK)
 	_, err = w.Write(msg)
@@ -32,10 +33,6 @@ func (sess *Session) GetSubmissions(w http.ResponseWriter, r *http.Request) {
 		serveLog("%v", err)
 		return
 	}
-}
-
-func (sess *Session) GetSubmissionInfo(w http.ResponseWriter, r *http.Request, uuid string) {
-	serveLog("Getting sub#%s", uuid[:8])
 }
 
 func serveLog(fmtStr string, args ...interface{}) {

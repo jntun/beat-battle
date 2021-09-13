@@ -31,7 +31,6 @@ func (sess *Session) main(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 
-	//genLog("Main", r.URL.String())
 	splitURL := strings.Split(r.URL.String(), "/")
 	if !(len(splitURL) > 1) {
 		// for only /battle/ endpoint
@@ -45,10 +44,6 @@ func (sess *Session) main(w http.ResponseWriter, r *http.Request) {
 		}
 	case "submissions":
 		sess.GetSubmissions(w, r)
-	case "submission":
-		if len(splitURL) > 3 {
-			sess.GetSubmissionInfo(w, r, splitURL[3])
-		}
 	case "submit":
 		if r.Method == http.MethodPut {
 			sess.Submit(w, r)
