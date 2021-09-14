@@ -54,10 +54,14 @@ func (sess *Session) main(w http.ResponseWriter, r *http.Request) {
 }
 
 func (sess *Session) tryDrain() {
+	sess.trySubmDrain()
+	sess.tryVoteDrain()
+}
+
+func (sess *Session) trySubmDrain() {
 	if err := sess.drainSubmitQueue(); err != nil {
 		subLog("couldn't drain sub queue: %s", err)
 	}
-	sess.tryVoteDrain()
 }
 
 func (sess *Session) tryVoteDrain() {
