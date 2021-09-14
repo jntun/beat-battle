@@ -30,8 +30,7 @@ type queueIndex struct {
 	highWatermark uint
 }
 
-/* This is where we determined the threshold we want to actually "drain" the queue at */
-/* Drain in this context means process an item at n=lastInsert, make it visible in memory until reaching the i.length*/
+/* This is where we determine the threshold we want to actually "drain" the queue at */
 func (i *queueIndex) shouldDrain() bool {
 	if i.length == 0 {
 		return false
@@ -48,6 +47,12 @@ func (i *queueIndex) reset() {
 	i.lastInsert = uint(0)
 	i.length = uint(0)
 }
+
+/************************************* Drain implementations ************************************
+		Drain in this context means start at n=lastInsert,
+		process entry at items[n] and make it visible in memory.
+		Repeat until n=i.length
+************************************************************************************************/
 
 func (sess *Session) drainSubmitQueue() error {
 	if sess.queueStat.subm.shouldDrain() {
