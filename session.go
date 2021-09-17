@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+const url = "127.0.0.1"
 const port = 8000
 const endpoint = "/battle/"
 
