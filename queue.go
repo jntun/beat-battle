@@ -5,10 +5,13 @@ import (
 	"fmt"
 )
 
-var submEntryPoint uint = 10
-var submHWM uint = 100
-var voteEntryPoint uint = 100
-var voteHWM uint = 1000
+const hwmScalar uint = 1
+const hwmDivisor uint = 10
+
+var submHWM = 100 * hwmScalar
+var submEntryPoint = submHWM / hwmDivisor
+var voteHWM = 1000 * hwmScalar
+var voteEntryPoint = voteHWM / hwmDivisor
 
 type queueStat struct {
 	vote queueIndex
@@ -56,7 +59,7 @@ func (i *queueIndex) reset() {
 
 func (sess *Session) drainSubmitQueue() error {
 	if sess.queueStat.subm.shouldDrain() {
-		hwmLog("entry point for submit queue...")
+		hwmLog("entry point threshold for submit queue...")
 		sess.battle.SubLock.Lock()
 		for ; sess.queueStat.subm.lastInsert < sess.queueStat.subm.length; sess.queueStat.subm.lastInsert++ {
 			subMsg := sess.submissionQueue[sess.queueStat.subm.lastInsert]
@@ -78,7 +81,7 @@ func (sess *Session) drainSubmitQueue() error {
 
 func (sess *Session) drainVoteQueue() error {
 	if sess.queueStat.vote.shouldDrain() {
-		hwmLog("entry point for vote queue...")
+		hwmLog("entry point threshold for vote queue...")
 		for ; sess.queueStat.vote.lastInsert < sess.queueStat.vote.length; sess.queueStat.vote.lastInsert++ {
 			voteMsg := sess.voteQueue[sess.queueStat.vote.lastInsert]
 			if verifyVote(voteMsg) {
