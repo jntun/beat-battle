@@ -46,6 +46,7 @@ func TestSession_AddVoteLive(t *testing.T) {
 	}
 
 	client := http.Client{}
+	// Send enough to hit the HWM point
 	for i := 0; i < int(voteHWM); i++ {
 		resp, err := client.Do(req)
 		if err != nil {
