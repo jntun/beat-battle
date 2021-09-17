@@ -18,14 +18,6 @@ type Session struct {
 	queueStat
 }
 
-func (sess *Session) hookHttpServer() {
-	http.HandleFunc(endpoint, sess.main)
-}
-
-func (sess Session) getAddr() string {
-	return fmt.Sprintf(":%d", port)
-}
-
 func (sess *Session) main(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -69,6 +61,14 @@ func (sess *Session) tryVoteDrain() {
 	if err := sess.drainVoteQueue(); err != nil {
 		subLog("couldn't drain vote queue: %s", err)
 	}
+}
+
+func (sess *Session) hookHttpServer() {
+	http.HandleFunc(endpoint, sess.main)
+}
+
+func (sess Session) getAddr() string {
+	return fmt.Sprintf("%s:%d", url, port)
 }
 
 func NewSession() Session {
