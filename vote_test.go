@@ -4,7 +4,6 @@ import (
 	"beat-battle/models"
 	"bytes"
 	"encoding/json"
-	"fmt"
 	uuid "github.com/satori/go.uuid"
 	"io/ioutil"
 	"net/http"
@@ -13,25 +12,11 @@ import (
 )
 
 func TestSession_AddVoteLive(t *testing.T) {
-	tResp, err := http.Get("http://localhost:8000/battle/submissions")
+	targetID, err := getSubmissionTarget()
 	if err != nil {
-		t.Errorf("couldn't get target body: %s", err)
+		t.Error(err)
 	}
-	tBody, err := ioutil.ReadAll(tResp.Body)
-	if err != nil {
-		t.Errorf("failed target response body read: %s", err)
-	}
-	var tObj interface{}
-	err = json.Unmarshal(tBody, &tObj)
-	var targetID string
-
-	for key, _ := range tObj.(map[string]interface{}) {
-		targetID = key
-		break
-	}
-
-	fmt.Println("target:", targetID)
-
+	t.Log("target:", targetID)
 	msg := models.VoteMessage{
 		User: models.UserMsg{
 			Id:   uuid.NewV4().String(),
