@@ -8,8 +8,9 @@ import (
 )
 
 func main() {
+	hwmLog("submHWM: %d | submEntry: %d | voteHWM: %d | voteEntry: %d", submHWM, submEntryPoint, voteHWM, voteEntryPoint)
 	sess := NewSession()
-	log.Printf("Starting on %s...\n", sess.getAddr())
+	genLog("Main", "Starting on %s...", sess.getAddr())
 	server := &http.Server{Addr: sess.getAddr()}
 	sess.hookHttpServer()
 	log.Fatalln(server.ListenAndServe())
