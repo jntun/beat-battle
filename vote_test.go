@@ -60,7 +60,7 @@ func TestSession_AddVote(t *testing.T) {
 }
 
 func makeVoteReq(sess *Session) *http.Request {
-	var target models.Submission
+	var target *models.Submission
 	for _, sub := range sess.battle.Submissions {
 		target = sub
 		break
