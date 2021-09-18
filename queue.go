@@ -34,7 +34,7 @@ type queueIndex struct {
 }
 
 /* This is where we determine the threshold we want to actually "drain" the queue at */
-func (i *queueIndex) shouldDrain() bool {
+func (i *queueIndex) shouldEnter() bool {
 	if i.length == 0 {
 		return false
 	}
@@ -58,7 +58,7 @@ func (i *queueIndex) reset() {
 ************************************************************************************************/
 
 func (sess *Session) drainSubmitQueue() error {
-	if sess.queueStat.subm.shouldDrain() {
+	if sess.queueStat.subm.shouldEnter() {
 		hwmLog("entry point threshold for submit queue...")
 		sess.battle.SubLock.Lock()
 		for ; sess.queueStat.subm.lastInsert < sess.queueStat.subm.length; sess.queueStat.subm.lastInsert++ {
@@ -80,7 +80,7 @@ func (sess *Session) drainSubmitQueue() error {
 }
 
 func (sess *Session) drainVoteQueue() error {
-	if sess.queueStat.vote.shouldDrain() {
+	if sess.queueStat.vote.shouldEnter() {
 		hwmLog("entry point threshold for vote queue...")
 		for ; sess.queueStat.vote.lastInsert < sess.queueStat.vote.length; sess.queueStat.vote.lastInsert++ {
 			voteMsg := sess.voteQueue[sess.queueStat.vote.lastInsert]
