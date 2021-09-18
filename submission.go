@@ -32,7 +32,7 @@ func (sess *Session) Submit(w http.ResponseWriter, r *http.Request) {
 	sess.submissionQueue[sess.queueStat.subm.length] = *subMsg
 	sess.queueStat.subm.length++
 	w.WriteHeader(http.StatusOK)
-	if _, err := w.Write([]byte("{ \"status\": \"done\" } ")); err != nil {
+	if _, err := w.Write(models.ResponseStatus{Success: true, Code: 0}.AsJSONBytes()); err != nil {
 		log.Printf("failed write: %s\n", err)
 	}
 }
