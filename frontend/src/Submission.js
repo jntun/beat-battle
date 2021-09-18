@@ -1,26 +1,35 @@
 import React from 'react';
-import axios from 'axios';
+import SCPlayer from './Players/SCPlayer';
+import Voter from './Voter';
 
 export default class Submission extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {data: props.data};
     }
 
     componentDidMount() {
-        axios.get("localhost:8000/battle/submission/" + this.props.id)
-            .then((response) => {
-                if (response.status === 200) {
-                    this.setState({data: response.data})
-                }
-            })
+        console.log(this.props.id, this.state.data);
+    }
+
+    getAppropriatePlayer() {
+        switch (this.state.data.type) {
+            case 0:
+                console.log("soundcloud detected...");
+                return <SCPlayer id={"1103179147"}/>;
+            default:
+                console.log("other detected...");
+                return <p className={"error"} id={"player-error"}>Unknown type of submission. Cannot play.</p>
+        }
     }
 
     render() {
+        let player = this.getAppropriatePlayer();
         return (
             <div id={this.props.id} className={"submission"}>
-                <p>Submission#{this.props.id}</p>
+                <p>Submission#{this.props.id.substring(0, 8)}</p>
+                {player}
+                <Voter id={this.props.id} author={this.state.data.author}/>
             </div>
         )
     }

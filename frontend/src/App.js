@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+import {baseEndpoint} from "./Models";
 import React from 'react';
 import axios from 'axios';
 import Submission from "./Submission";
@@ -7,16 +7,15 @@ import './App.css';
 class App extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = {submissions: [], data: false, maxView: 10}
+        this.state = {submissions: [], data: [], gotData: false, maxView: 10}
     }
 
     getSubmissions = () => {
-        axios.get('http://localhost:8000/battle/submissions')
+        axios.get(baseEndpoint + 'submissions')
             .then((response) => {
                 if (response.status === 200) {
                     let submissions = Object.keys(response.data);
-                    this.setState({submissions: submissions, data: true});
+                    this.setState({submissions: submissions, data: response.data, gotData: true});
                 }
             })
             .catch((err) => {
@@ -31,7 +30,7 @@ class App extends React.Component {
 
     render() {
         let submissions = [];
-        if (!this.state.data) {
+        if (!this.state.gotData) {
             submissions = <p id={"no-submissions"}>No submissions.</p>
         } else {
             for (let i = 0; i < this.state.submissions.length; i++) {
@@ -39,7 +38,8 @@ class App extends React.Component {
                     break;
                 }
                 let x = this.state.submissions[i];
-                submissions.push(<Submission id={x}/>)
+                let data = this.state.data[x];
+                submissions.push(<Submission key={x} id={x} data={data}/>)
             }
         }
 
