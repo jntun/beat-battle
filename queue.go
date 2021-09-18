@@ -22,7 +22,7 @@ type queueIndex struct {
 	// the index of the last place we inserted from
 	lastInsert uint
 
-	// all queues have a length of the hwm, however this represents the actual filled length
+	// all queues have a max length of the hwm, however this is the actually filled length
 	length uint
 
 	// entryPoint is the multiple of when we want to start processing
@@ -56,7 +56,7 @@ func (i *queueIndex) reset() {
 
 /************************************* Drain implementations ************************************
 		Drain in this context means start at n=lastInsert,
-		process entry at items[n] and make it visible in memory.
+		process entry at items[n] and make it visible in sess.battle memory.
 		Repeat until n=i.length
 ************************************************************************************************/
 
