@@ -69,7 +69,7 @@ func (sess *Session) drainSubmitQueue() error {
 				sess.battle.SubLock.Unlock()
 				return fmt.Errorf("%v, %s", subMsg, err)
 			}
-			sess.battle.Submissions[submission.UUID.String()] = *submission
+			sess.battle.Submissions[submission.UUID.String()] = submission
 		}
 		sess.battle.SubLock.Unlock()
 	}

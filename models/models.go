@@ -16,7 +16,7 @@ type Battle struct {
 	ID
 	Title            string
 	Sequence         uint
-	Submissions      map[string]Submission
+	Submissions      map[string]*Submission
 	SubLock          sync.Mutex
 	submissionWindow TimeWindow
 	voteWindow       TimeWindow
@@ -41,7 +41,7 @@ type TimeWindow struct {
 }
 
 func NewBattle() Battle {
-	subMap := make(map[string]Submission)
+	subMap := make(map[string]*Submission)
 	return Battle{
 		newID(),
 		"Test battle #1",
