@@ -11,7 +11,7 @@ import (
 	"testing"
 )
 
-func TestSession_AddVoteLive(t *testing.T) {
+func TestSession_AddVoteLiveHWM(t *testing.T) {
 	targetID, err := getSubmissionTarget()
 	if err != nil {
 		t.Error(err)
