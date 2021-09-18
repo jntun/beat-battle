@@ -11,7 +11,35 @@ import (
 	"testing"
 )
 
-func TestSession_SubmitLive(t *testing.T) {
+func TestSession_SubmitLiveSingle(t *testing.T) {
+	msg := models.SubmissionMessage{
+		Author: models.UserMsg{
+			Id:   uuid.NewV4().String(),
+			Name: "jntun",
+		},
+		Resource: "https://soundcloud.com/jntun/backflip",
+		Type:     0,
+	}
+
+	jsonByte, _ := json.Marshal(msg)
+	req, err := http.NewRequest(http.MethodPut, "http://localhost:8000/battle/submit", bytes.NewBuffer(jsonByte))
+	if err != nil {
+		t.Errorf("failed to forge subm request: %s", err)
+	}
+
+	client := http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		t.Errorf("failed subm request: %s", err)
+	}
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		t.Errorf("failed response body read: %s", err)
+	}
+	t.Log(string(body))
+}
+
+func TestSession_SubmitLiveHWM(t *testing.T) {
 	msg := models.SubmissionMessage{
 		Author: models.UserMsg{
 			Id:   uuid.NewV4().String(),
