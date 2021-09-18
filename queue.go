@@ -38,6 +38,9 @@ func (i *queueIndex) shouldEnter() bool {
 	if i.length == 0 {
 		return false
 	}
+	if i.entryPoint == 0 {
+		return true
+	}
 	return i.length%i.entryPoint == 0
 }
 
