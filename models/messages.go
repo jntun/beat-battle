@@ -19,3 +19,9 @@ type SubmissionMessage struct {
 	Resource string
 	Type     uint
 }
+
+type ResponseStatus struct {
+	Success bool   `json:"success"`
+	Code    uint8  `json:"status"`
+	OptBody []byte `json:"body,omitempty"`
+}
